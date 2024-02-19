@@ -2,10 +2,11 @@ import styles from "./IdleScreen.module.css";
 import { Button } from "./Button";
 import { ChatBox } from "./ChatBox";
 import { useState } from "react";
+import { Message } from "../App";
 
 type Props = {
   status: "idle" | "calling";
-  chatMessages: string[];
+  chatMessages: Message[];
   onSendMessage: (chatText: string) => void;
   onDisconnect: () => void;
 };

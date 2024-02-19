@@ -7,6 +7,12 @@ import { ChatScreen } from "./components/ChatScreen.tsx";
 
 type CallStatus = "idle" | "chatroom";
 
+export type Message = {
+  body: string;
+  username: string;
+  color: string;
+}
+
 function App() {
   const [username, setUsername] = useState("");
   const [color, setColor] = useState("#FFFFFF");
@@ -18,7 +24,7 @@ function App() {
 
   const chatTextRef = useRef<((chatText: string) => void) | null>(null);
 
-  const [chatMessages, setChatMessages] = useState<string[]>([]);
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
 
   /**
    * Create a new WebSocket connection to the server.
@@ -264,9 +270,9 @@ function App() {
     }
   };
 
-  const onSendMessage = (chatText: string) => {
-    setChatMessages((value) => [...value, chatText]);
-    chatTextRef.current?.(chatText);
+  const onSendMessage = (body: string) => {
+    setChatMessages((value) => [...value, { body, username, color }]);
+    chatTextRef.current?.(body);
   };
 
   if (status === "chatroom") {
