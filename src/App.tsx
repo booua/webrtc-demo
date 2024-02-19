@@ -102,7 +102,7 @@ function App() {
       peerConnection.ondatachannel = ({ channel }) => {
         if (channel.label === "chat-text") {
           channel.onmessage = ({ data }) => {
-            console.log(data);
+            data = JSON.parse(data);
             setChatMessages((messages) => [...messages, { body: data.body, username: data.username, color: data.color}]);
           };
         }
