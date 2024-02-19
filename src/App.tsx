@@ -310,7 +310,6 @@ function App() {
       setUsername={setUsername}
       disabled={!username || !color}
       setColor={setColor}
-      status={status}
       onStartCall={onStartCall}
     />
   );

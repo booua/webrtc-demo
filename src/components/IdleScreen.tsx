@@ -3,7 +3,6 @@ import styles from './IdleScreen.module.css';
 import { Button } from './Button';
 
 type Props = {
-  status: 'idle' | 'calling';
   onStartCall: () => void;
   username: string;
   setUsername: (username: string) => void;
@@ -12,20 +11,13 @@ type Props = {
   disabled?: boolean;
 };
 
-export function IdleScreen({ status, onStartCall, username, color, setUsername, setColor, disabled }: Props) {
+export function IdleScreen({ onStartCall, username, color, setUsername, setColor, disabled }: Props) {
   const onColorChange = (event: React.FormEvent<HTMLInputElement>) => {
     setColor(event.currentTarget.value);
   };
   const onUsernameChange = (event: React.FormEvent<HTMLInputElement>) => {
     setUsername(event.currentTarget.value);
   };
-
-  if (status === 'calling') {
-    return <div className={styles['idle-page']}>
-      <h1 className={styles.title}>Calling...</h1>
-    </div>
-
-  }
 
   return (
     <div className={styles['idle-page']}>
