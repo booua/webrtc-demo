@@ -6,5 +6,11 @@ type Props = {
 };
 
 export function ChatBox({ chatMessages }: Props) {
-  return <div className={styles["chat-box"]}>chatbox</div>;
+  return (
+    <div className={styles["chat-box"]}>
+      {chatMessages?.map((message) => (
+        <div>{message}</div>
+      ))}
+    </div>
+  );
 }
