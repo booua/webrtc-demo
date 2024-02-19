@@ -1,6 +1,9 @@
+import { nanoid } from 'nanoid';
+
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { IdleScreen } from "./components/IdleScreen";
+import {ChatScreen} from "./components/ChatScreen.tsx";
 
 type CallStatus = "idle" | "calling" | "in-progress";
 
@@ -8,7 +11,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [color, setColor] = useState("#FFFFFF");
 
-  const id = useRef().current;
+  const id = useRef(nanoid()).current;
 
   const [status, setStatus] = useState<CallStatus>("idle");
   const disposeRef = useRef<(() => void) | null>(null);
@@ -127,7 +130,7 @@ function App() {
 
         // Show the local video stream for a preview
         if (localRef.current) {
-          localRef.current.srcObject = localStream;
+          // localRef.current.srcObject = localStream;
         }
 
         // Play a notification sound to indicate that the call has started
@@ -290,6 +293,7 @@ function App() {
   if (status === "in-progress") {
     return (
       <ChatScreen
+        status={status}
         chatMessages={chatMessages}
         onSendMessage={onSendMessage}
         onDisconnect={onDisconnect}
