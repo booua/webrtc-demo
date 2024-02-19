@@ -20,9 +20,6 @@ function App() {
 
   const [chatMessages, setChatMessages] = useState<string[]>([]);
 
-  const remoteRef = useRef<HTMLVideoElement>(null);
-  const localRef = useRef<HTMLVideoElement>(null);
-
   /**
    * Create a new WebSocket connection to the server.
    */
@@ -106,32 +103,13 @@ function App() {
       };
 
       /**
-       * Add the local media stream to the peer connection.
-       */
-      // localStream.getTracks().forEach((track) => {
-      //   peerConnection.addTrack(track, localStream);
-      // });
-
-      /**
        * Once the remote media stream is available, add it to the video element.
        */
-      peerConnection.ontrack = (event) => {
-        const remoteStream = event.streams[0];
-
+      peerConnection.ontrack = () => {
         // Synchronously update the status so we have the refs available immediately
         flushSync(() => {
           setStatus("chatroom");
         });
-
-        // Show the remote video stream for the call
-        if (remoteRef.current) {
-          remoteRef.current.srcObject = remoteStream;
-        }
-
-        // Show the local video stream for a preview
-        if (localRef.current) {
-          // localRef.current.srcObject = localStream;
-        }
 
         // Play a notification sound to indicate that the call has started
         new Audio("/alert-start.mp3").play();
@@ -297,8 +275,6 @@ function App() {
         chatMessages={chatMessages}
         onSendMessage={onSendMessage}
         onDisconnect={onDisconnect}
-        remoteRef={remoteRef}
-        localRef={localRef}
       />
     );
   }

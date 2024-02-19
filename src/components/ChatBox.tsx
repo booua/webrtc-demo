@@ -1,5 +1,4 @@
 import styles from "./IdleScreen.module.css";
-import { Button } from "./Button";
 
 type Props = {
   chatMessages?: string[];
@@ -8,8 +7,8 @@ type Props = {
 export function ChatBox({ chatMessages }: Props) {
   return (
     <div className={styles["chat-box"]}>
-      {chatMessages?.map((message) => (
-        <div>{message}</div>
+      {chatMessages?.map((message, idx) => (
+        <div key={`${idx}-${message.length}`}>{message}</div>
       ))}
     </div>
   );

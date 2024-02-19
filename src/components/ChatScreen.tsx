@@ -8,8 +8,6 @@ type Props = {
   chatMessages: string[];
   onSendMessage: (chatText: string) => void;
   onDisconnect: () => void;
-  remoteRef: React.RefObject<HTMLVideoElement>;
-  localRef: React.RefObject<HTMLVideoElement>;
 };
 
 export function ChatScreen({
@@ -17,8 +15,6 @@ export function ChatScreen({
   onSendMessage,
   chatMessages,
   onDisconnect,
-  remoteRef,
-  localRef,
 }: Props) {
   const [message, setMessage] = useState("");
   const handleInput = (e) => {
