@@ -10,6 +10,10 @@ function App() {
   const [status, setStatus] = useState<CallStatus>("idle");
   const disposeRef = useRef<(() => void) | null>(null);
 
+  const chatTextRef = useRef<((chatText: string) => void) | null>(null);
+
+  const [chatMessages, setChatMessages] = useState<string[]>([]);
+
   const remoteRef = useRef<HTMLVideoElement>(null);
   const localRef = useRef<HTMLVideoElement>(null);
 
@@ -47,15 +51,6 @@ function App() {
       const webSocket = await createSocket();
 
       /**
-       * Set up the local media stream for sending video and audio.
-       * This will also request permission from the user to access their camera and microphone.
-       */
-      const localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-
-      /**
        * Create a new RTCPeerConnection to manage WebRTC connections.
        * This will use Google's public STUN servers for NAT traversal.
        */
@@ -73,7 +68,11 @@ function App() {
       /**
        * Create a data channel to send text data between peers.
        */
-      const dataChannel = peerConnection.createDataChannel("reactions");
+      const dataChannel = peerConnection.createDataChannel("chat-text");
+
+      chatTextRef.current = (chatText: string) => {
+        dataChannel.send(chatText);
+      };
 
       /**
        * Store the dispose function in the ref for cleanup later.
@@ -87,6 +86,7 @@ function App() {
         localStream.getTracks().forEach((track) => {
           track.stop();
         });
+        dataChannel;
 
         disposeRef.current = null;
       };
@@ -95,9 +95,9 @@ function App() {
        * Receive text data from the other peer and store it in the state.
        */
       peerConnection.ondatachannel = ({ channel }) => {
-        if (channel.label === "reactions") {
+        if (channel.label === "chat-text") {
           channel.onmessage = ({ data }) => {
-            // setReactions((reactions) => [...reactions, data]);
+            console.log(data);
           };
         }
       };
@@ -275,6 +275,7 @@ function App() {
       new Audio("/alert-stop.mp3").play();
 
       setStatus("idle");
+      setChatMessages([]); //get from history??
 
       disposeRef.current?.();
     } catch (error) {
@@ -282,8 +283,20 @@ function App() {
     }
   };
 
+  const onSendMessage = (chatText: string) => {
+    chatTextRef.current?.(chatText);
+  };
+
   if (status === "in-progress") {
-    return <div>we should be connected now</div>;
+    return (
+      <ChatScreen
+        chatMessages={chatMessages}
+        onSendMessage={onSendMessage}
+        onDisconnect={onDisconnect}
+        remoteRef={remoteRef}
+        localRef={localRef}
+      />
+    );
   }
 
   return <IdleScreen status={status} onStartCall={onStartCall} />;
