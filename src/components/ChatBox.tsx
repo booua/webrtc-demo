@@ -9,8 +9,13 @@ type Props = {
 export function ChatBox({ chatMessages }: Props) {
   return (
     <div className={styles["chat-box"]}>
-      {chatMessages?.map((message) => (
-        <div className={chatStyles["chat-message"]}>{message}</div>
+      {chatMessages?.map((message, idx) => (
+        <div
+          key={`${idx}-${message.length}`}
+          className={chatStyles["chat-message"]}
+        >
+          {message}
+        </div>
       ))}
     </div>
   );
