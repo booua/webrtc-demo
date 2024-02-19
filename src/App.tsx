@@ -1,9 +1,9 @@
-import { nanoid } from 'nanoid';
+import { nanoid } from "nanoid";
 
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { IdleScreen } from "./components/IdleScreen";
-import {ChatScreen} from "./components/ChatScreen.tsx";
+import { ChatScreen } from "./components/ChatScreen.tsx";
 
 type CallStatus = "idle" | "chatroom";
 
@@ -100,7 +100,7 @@ function App() {
       peerConnection.ondatachannel = ({ channel }) => {
         if (channel.label === "chat-text") {
           channel.onmessage = ({ data }) => {
-            console.log(data);
+            setChatMessages((messages) => [...messages, data]);
           };
         }
       };

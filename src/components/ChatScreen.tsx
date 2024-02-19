@@ -37,7 +37,7 @@ export function ChatScreen({
 
   return (
     <div className={styles["idle-page"]}>
-      <div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <ChatBox chatMessages={chatMessages} />
         <textarea
           id="dataChannelSend"
