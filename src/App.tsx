@@ -1,20 +1,13 @@
-import { nanoid } from 'nanoid';
+import { useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { IdleScreen } from "./components/IdleScreen";
 
-import { useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
-import { CallScreen } from './components/CallScreen';
-import { IdleScreen } from './components/IdleScreen';
-
-type CallStatus = 'idle' | 'calling' | 'in-progress';
+type CallStatus = "idle" | "calling" | "in-progress";
 
 function App() {
-  const id = useRef(nanoid()).current;
+  const id = useRef().current;
 
-  const [status, setStatus] = useState<CallStatus>('idle');
-
-  const [reactions, setReactions] = useState<string[]>([]);
-
-  const sendReactionRef = useRef<((reaction: string) => void) | null>(null);
+  const [status, setStatus] = useState<CallStatus>("idle");
   const disposeRef = useRef<(() => void) | null>(null);
 
   const remoteRef = useRef<HTMLVideoElement>(null);
@@ -27,7 +20,7 @@ function App() {
     const socket = new WebSocket(
       // Use wss:// for secure connections to avoid mixed content errors
       // This is necessary when the app is deployed or tunnelled
-      `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${
+      `${location.protocol === "https:" ? "wss:" : "ws:"}//${
         location.host
       }/socket`
     );
@@ -45,7 +38,7 @@ function App() {
    */
   const onStartCall = async () => {
     try {
-      setStatus('calling');
+      setStatus("calling");
 
       /**
        * Set up the WebSocket connection.
@@ -70,8 +63,8 @@ function App() {
         iceServers: [
           {
             urls: [
-              'stun:stun1.l.google.com:19302',
-              'stun:stun2.l.google.com:19302',
+              "stun:stun1.l.google.com:19302",
+              "stun:stun2.l.google.com:19302",
             ],
           },
         ],
@@ -80,11 +73,7 @@ function App() {
       /**
        * Create a data channel to send text data between peers.
        */
-      const dataChannel = peerConnection.createDataChannel('reactions');
-
-      sendReactionRef.current = (reaction: string) => {
-        dataChannel.send(reaction);
-      };
+      const dataChannel = peerConnection.createDataChannel("reactions");
 
       /**
        * Store the dispose function in the ref for cleanup later.
@@ -98,7 +87,6 @@ function App() {
           track.stop();
         });
 
-        sendReactionRef.current = null;
         disposeRef.current = null;
       };
 
@@ -106,9 +94,9 @@ function App() {
        * Receive text data from the other peer and store it in the state.
        */
       peerConnection.ondatachannel = ({ channel }) => {
-        if (channel.label === 'reactions') {
+        if (channel.label === "reactions") {
           channel.onmessage = ({ data }) => {
-            setReactions((reactions) => [...reactions, data]);
+            // setReactions((reactions) => [...reactions, data]);
           };
         }
       };
@@ -128,7 +116,7 @@ function App() {
 
         // Synchronously update the status so we have the refs available immediately
         flushSync(() => {
-          setStatus('in-progress');
+          setStatus("in-progress");
         });
 
         // Show the remote video stream for the call
@@ -142,7 +130,7 @@ function App() {
         }
 
         // Play a notification sound to indicate that the call has started
-        new Audio('/alert-start.mp3').play();
+        new Audio("/alert-start.mp3").play();
       };
 
       /**
@@ -192,12 +180,12 @@ function App() {
       peerConnection.oniceconnectionstatechange = () => {
         // If the connection failed, try to restart the ICE connection.
         // This will trigger the onnegotiationneeded event and create a new offer.
-        if (peerConnection.iceConnectionState === 'failed') {
+        if (peerConnection.iceConnectionState === "failed") {
           peerConnection.restartIce();
         }
 
         // If the connection is disconnected, update the status and clean up the resources
-        if (peerConnection.iceConnectionState === 'disconnected') {
+        if (peerConnection.iceConnectionState === "disconnected") {
           onDisconnect();
         }
       };
@@ -217,8 +205,8 @@ function App() {
           const polite = data.id.localeCompare(id) === 1;
 
           const offerCollision =
-            data.description.type == 'offer' &&
-            (makingOffer || peerConnection.signalingState !== 'stable');
+            data.description.type == "offer" &&
+            (makingOffer || peerConnection.signalingState !== "stable");
 
           ignoreOffer = !polite && offerCollision;
 
@@ -234,7 +222,7 @@ function App() {
 
           if (offerCollision) {
             await Promise.all([
-              peerConnection.setLocalDescription({ type: 'rollback' }),
+              peerConnection.setLocalDescription({ type: "rollback" }),
               peerConnection.setRemoteDescription(data.description),
             ]);
           } else {
@@ -242,7 +230,7 @@ function App() {
           }
 
           // If we got an offer, create an answer and send it to the other peer
-          if (data.description.type === 'offer') {
+          if (data.description.type === "offer") {
             await peerConnection.setLocalDescription(
               await peerConnection.createAnswer()
             );
@@ -282,10 +270,9 @@ function App() {
   const onDisconnect = () => {
     try {
       // Play a sound to indicate that the call has ended
-      new Audio('/alert-stop.mp3').play();
+      new Audio("/alert-stop.mp3").play();
 
-      setStatus('idle');
-      setReactions([]);
+      setStatus("idle");
 
       disposeRef.current?.();
     } catch (error) {
@@ -293,23 +280,8 @@ function App() {
     }
   };
 
-  /**
-   * Send a reaction to the other peer.
-   */
-  const onReaction = (reaction: string) => {
-    sendReactionRef.current?.(reaction);
-  };
-
-  if (status === 'in-progress') {
-    return (
-      <CallScreen
-        reactions={reactions}
-        onReaction={onReaction}
-        onDisconnect={onDisconnect}
-        remoteRef={remoteRef}
-        localRef={localRef}
-      />
-    );
+  if (status === "in-progress") {
+    return <div>we should be connected now</div>;
   }
 
   return <IdleScreen status={status} onStartCall={onStartCall} />;
