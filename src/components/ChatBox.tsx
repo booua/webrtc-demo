@@ -6,6 +6,5 @@ type Props = {
 };
 
 export function ChatBox({ chatMessages }: Props) {
-  console.log(chatMessages);
   return <div className={styles["chat-box"]}>chatbox</div>;
 }
