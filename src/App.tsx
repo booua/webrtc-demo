@@ -79,6 +79,7 @@ function App() {
        * Store the dispose function in the ref for cleanup later.
        */
       disposeRef.current = () => {
+        webSocket.send(JSON.stringify({ id, history: [] }));
         // Close the connection, stop all tracks and cleanup refs
         webSocket.close();
         peerConnection.close();
@@ -161,6 +162,7 @@ function App() {
             JSON.stringify({
               id,
               description: peerConnection.localDescription,
+              conversationId: 12345,
             })
           );
         } catch (error) {
