@@ -287,6 +287,7 @@ function App() {
   };
 
   const onSendMessage = (chatText: string) => {
+    setChatMessages((value) => [...value, chatText]);
     chatTextRef.current?.(chatText);
   };
 
