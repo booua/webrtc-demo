@@ -6,15 +6,16 @@ type Props = {
   disabled?: boolean;
   children: string;
   onClick: () => void;
+  className?: string;
 }
 
-export function Button({ variant = 'primary', loading, children, onClick, disabled }: Props) {
+export function Button({ variant = 'primary', loading, children, onClick, disabled, className }: Props) {
   if (loading) {
     return <text>Connecting...</text>
   }
 
   return (
-    <button disabled={disabled} className={`${styles.button} ${styles[variant]} ${loading ? styles.loading : ''}`} onClick={onClick}>
+    <button  disabled={disabled} className={`${className} ${styles.button} ${styles[variant]} ${loading ? styles.loading : ''}`} onClick={onClick}>
       {children}
     </button>
   )

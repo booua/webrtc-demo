@@ -29,9 +29,17 @@ export function ChatScreen({
   const onEnterPress = (e) => {
     if (e.keyCode == 13 && e.shiftKey == false) {
       e.preventDefault();
+      sendMessage(message)
+    }
+  };
+
+  const sendMessage = (message: string) => {
+    try {
       onSendMessage(message);
       console.log("sending", message);
       setMessage("");
+    } catch (error) {
+      console.log("sendMessage error", error)
     }
   };
 
@@ -45,10 +53,11 @@ export function ChatScreen({
           onKeyDown={onEnterPress}
           onChange={handleInput}
         ></textarea>
+        <Button className={styles["submit-button"]} variant="primary" onClick={() => sendMessage(message)}>Send</Button>
         <Button variant="danger" onClick={onDisconnect}>
           End chat
         </Button>
-      </div>
+    </div>
     </div>
   );
 }
