@@ -86,9 +86,6 @@ function App() {
         webSocket.close();
         peerConnection.close();
 
-        localStream.getTracks().forEach((track) => {
-          track.stop();
-        });
         dataChannel;
 
         disposeRef.current = null;
@@ -108,9 +105,9 @@ function App() {
       /**
        * Add the local media stream to the peer connection.
        */
-      localStream.getTracks().forEach((track) => {
-        peerConnection.addTrack(track, localStream);
-      });
+      // localStream.getTracks().forEach((track) => {
+      //   peerConnection.addTrack(track, localStream);
+      // });
 
       /**
        * Once the remote media stream is available, add it to the video element.
@@ -302,7 +299,17 @@ function App() {
     );
   }
 
-  return <IdleScreen username={username} color={color} setUsername={setUsername} disabled={!username || !color} setColor={setColor} status={status} onStartCall={onStartCall} />;
+  return (
+    <IdleScreen
+      username={username}
+      color={color}
+      setUsername={setUsername}
+      disabled={!username || !color}
+      setColor={setColor}
+      status={status}
+      onStartCall={onStartCall}
+    />
+  );
 }
 
 export default App;
