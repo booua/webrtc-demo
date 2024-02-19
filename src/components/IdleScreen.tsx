@@ -30,7 +30,7 @@ export function IdleScreen({ onStartCall, username, color, setUsername, setColor
         </form>
 
         <Button disabled={disabled} onClick={onStartCall}>
-          Start call
+          Enter a chat room
         </Button>
       </div>
     </div>
