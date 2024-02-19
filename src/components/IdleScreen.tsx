@@ -11,7 +11,6 @@ export function IdleScreen({ status, onStartCall }: Props) {
     <div className={styles["idle-page"]}>
       <div>
         <h1 className={styles.title}>Welcome!</h1>
-        <>USER INPUT GOES HERE</>
       </div>
     </div>
   );
