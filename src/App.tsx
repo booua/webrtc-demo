@@ -5,7 +5,7 @@ import { flushSync } from "react-dom";
 import { IdleScreen } from "./components/IdleScreen";
 import {ChatScreen} from "./components/ChatScreen.tsx";
 
-type CallStatus = "idle" | "calling" | "in-progress";
+type CallStatus = "idle" | "chatroom";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -48,7 +48,7 @@ function App() {
    */
   const onStartCall = async () => {
     try {
-      setStatus("calling");
+      setStatus("chatroom");
 
       /**
        * Set up the WebSocket connection.
@@ -120,7 +120,7 @@ function App() {
 
         // Synchronously update the status so we have the refs available immediately
         flushSync(() => {
-          setStatus("in-progress");
+          setStatus("chatroom");
         });
 
         // Show the remote video stream for the call
@@ -290,7 +290,7 @@ function App() {
     chatTextRef.current?.(chatText);
   };
 
-  if (status === "in-progress") {
+  if (status === "chatroom") {
     return (
       <ChatScreen
         status={status}
