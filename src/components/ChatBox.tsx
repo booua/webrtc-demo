@@ -13,8 +13,9 @@ export function ChatBox({ chatMessages }: Props) {
         <div
           key={`${idx}-${body?.length}`}
           className={chatStyles["chat-message"]}
+          style={{ backgroundColor: color }}
         >
-          <h3 color={color}>{username}</h3>
+          <h3>{username}</h3>
           <p>{body}</p>
         </div>
       ))}

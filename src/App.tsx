@@ -15,7 +15,7 @@ export type Message = {
 
 function App() {
   const [username, setUsername] = useState("");
-  const [color, setColor] = useState("#FFFFFF");
+  const [color, setColor] = useState("#FF0000");
 
   const id = useRef(nanoid()).current;
 
@@ -79,8 +79,9 @@ function App() {
        */
       const dataChannel = peerConnection.createDataChannel("chat-text");
 
-      chatTextRef.current = (chatText: string) => {
-        dataChannel.send(chatText);
+      chatTextRef.current = (body: string) => {
+        console.log('sent', { body, username, color });
+        dataChannel.send(JSON.stringify({ body, username, color }));
       };
 
       /**
@@ -92,8 +93,6 @@ function App() {
         webSocket.close();
         peerConnection.close();
 
-        dataChannel;
-
         disposeRef.current = null;
       };
 
@@ -103,7 +102,8 @@ function App() {
       peerConnection.ondatachannel = ({ channel }) => {
         if (channel.label === "chat-text") {
           channel.onmessage = ({ data }) => {
-            setChatMessages((messages) => [...messages, data]);
+            console.log(data);
+            setChatMessages((messages) => [...messages, { body: data.body, username: data.username, color: data.color}]);
           };
         }
       };
