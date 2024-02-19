@@ -5,6 +5,9 @@ import { IdleScreen } from "./components/IdleScreen";
 type CallStatus = "idle" | "calling" | "in-progress";
 
 function App() {
+  const [username, setUsername] = useState("");
+  const [color, setColor] = useState("#FFFFFF");
+
   const id = useRef().current;
 
   const [status, setStatus] = useState<CallStatus>("idle");
@@ -299,7 +302,7 @@ function App() {
     );
   }
 
-  return <IdleScreen status={status} onStartCall={onStartCall} />;
+  return <IdleScreen username={username} color={color} setUsername={setUsername} disabled={!username || !color} setColor={setColor} status={status} onStartCall={onStartCall} />;
 }
 
 export default App;
